@@ -48,8 +48,6 @@ for (let report of reports) {
 
     if (isLevelSafe) {
         safeReportsCount++
-    } else {
-        const c = 123
     }
 }
 
