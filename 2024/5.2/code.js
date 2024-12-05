@@ -22,7 +22,28 @@ for (let update of updates) {
         }
     }
 
-    if (isUpdateCorrect) {
+    if (!isUpdateCorrect) {
+        let swaps = 0
+        do {
+            swaps = 0
+            for (const rule of rules) {
+                const ruleNumbers = rule.split('|').map(value => parseInt(value))
+                const update1Index = update.indexOf(ruleNumbers[0])
+                const update2Index = update.indexOf(ruleNumbers[1])
+
+                if (update1Index === -1 || update2Index === -1) {
+                    continue
+                }
+
+                if (update2Index < update1Index) {
+                    const temp = update[update1Index];
+                    update[update1Index] = update[update2Index];
+                    update[update2Index] = temp;
+                    swaps++
+                }
+            }
+        } while (swaps === 0)
+
         sum += update[Math.floor(update.length / 2)]
     }
 }
