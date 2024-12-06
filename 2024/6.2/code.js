@@ -1,9 +1,18 @@
 const fs = require('fs')
 
-const originalMap = fs.readFileSync('input.txt').toString().split('\n').map(line => line.split(''))
-// const originalMap = fs.readFileSync('input_example.txt').toString().split('\n').map(line => line.split(''))
+// const originalMap = fs.readFileSync('input.txt').toString().split('\n').map(line => line.split(''))
+const originalMap = fs.readFileSync('input_example.txt').toString().split('\n').map(line => line.split(''))
 
-const UP = 'up', RIGHT = 'right', DOWN = 'down', LEFT = 'left', OBSTACLE = '#', FREE_SPOT = '.'
+const UP = 'up', RIGHT = 'right', DOWN = 'down', LEFT = 'left', OBSTACLE = '#', FREE_SPOT = '.', initialPosition = findInitialPosition()
+
+function findInitialPosition() {
+    for (let y = 0; y < originalMap.length; y++) {
+        const x = originalMap[y].indexOf('^')
+        if (x !== -1) {
+            return [y, x]
+        }
+    }
+}
 
 let foundLoopsCount = 0, progress = 1
 
@@ -18,7 +27,7 @@ for (let mapY = 0; mapY < originalMap.length; mapY++) {
         const map = originalMap.map(line => line.slice())
         map[mapY][mapX] = OBSTACLE
 
-        let outOfBounds = false, foundLoop = false, currentPosition = findInitialPosition(), currentDirection = UP
+        let outOfBounds = false, foundLoop = false, currentPosition = Array.from(initialPosition), currentDirection = UP
         const turns = []
 
         function makeNextAction() {
@@ -93,15 +102,6 @@ for (let mapY = 0; mapY < originalMap.length; mapY++) {
             currentPosition = [y, x]
         }
 
-        function findInitialPosition() {
-            for (let y = 0; y < map.length; y++) {
-                const x = map[y].indexOf('^')
-                if (x !== -1) {
-                    return [y, x]
-                }
-            }
-        }
-
         function analyzeTurns() {
             // todo: check this condition - maybe not needed?
             if (turns.length < 8) {
@@ -121,8 +121,12 @@ for (let mapY = 0; mapY < originalMap.length; mapY++) {
         }
 
         do {
+            let start = performance.now()
             makeNextAction()
+            // console.log('makeNextAction time: ' + (performance.now() - start))
+            start = performance.now()
             analyzeTurns()
+            // console.log('analyzeTurns time: ' + (performance.now() - start))
             if (turns.length > 10000) {
                 console.log(turns, mapY, mapX)
             }
