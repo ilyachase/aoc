@@ -1,7 +1,7 @@
 const fs = require('fs')
 
-// const originalMap = fs.readFileSync('input.txt').toString().split('\n').map(line => line.split(''))
-const originalMap = fs.readFileSync('input_example.txt').toString().split('\n').map(line => line.split(''))
+const originalMap = fs.readFileSync('input.txt').toString().split('\n').map(line => line.split(''))
+// const originalMap = fs.readFileSync('input_example.txt').toString().split('\n').map(line => line.split(''))
 
 const UP = 'up', RIGHT = 'right', DOWN = 'down', LEFT = 'left', OBSTACLE = '#', FREE_SPOT = '.', initialPosition = findInitialPosition()
 
@@ -112,7 +112,15 @@ for (let mapY = 0; mapY < originalMap.length; mapY++) {
                 const possibleLoopOne = turns.slice(-possibleLoopLength * 2).slice(0, possibleLoopLength)
                 const possibleLoopTwo = turns.slice(-possibleLoopLength * 2).slice(-possibleLoopLength)
 
-                if (JSON.stringify(possibleLoopOne) === JSON.stringify(possibleLoopTwo)) {
+                let loopsEqual = true
+                for (let i = 0; i < possibleLoopTwo.length; i++) {
+                    if (possibleLoopOne[i][0] !== possibleLoopTwo[i][0] || possibleLoopOne[i][1] !== possibleLoopTwo[i][1]) {
+                        loopsEqual = false
+                        break
+                    }
+                }
+
+                if (loopsEqual) {
                     foundLoopsCount++
                     foundLoop = true
                     break
