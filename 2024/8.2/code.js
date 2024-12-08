@@ -1,7 +1,7 @@
 const fs = require('fs')
 
 const map = fs.readFileSync('input.txt').toString().split('\n').map(line => line.split(''))
-const antinodesMap = Array.from({ length: map.length }, () => Array(map[0].length).fill('.'))
+const antinodesMap = Array.from({length: map.length}, () => Array(map[0].length).fill('.'))
 
 function addAntiNode(y, x) {
     if (y > antinodesMap.length - 1 || x > antinodesMap[0].length - 1) {
@@ -11,8 +11,6 @@ function addAntiNode(y, x) {
     if (y < 0 || x < 0) {
         return;
     }
-
-    console.log('Adding node at ' + y + ',' + x)
 
     antinodesMap[y][x] = '#'
 }
@@ -28,9 +26,14 @@ function findFriends(map, me_y, me_x) {
             if (map[y][x] === me) {
                 const diffX = Math.abs(me_x - x)
                 const diffY = Math.abs(me_y - y)
-                const antinode1X = me_x < x ? x + diffX : x - diffX
-                const antinode1Y = me_y < y ? y + diffY : y - diffY
-                addAntiNode(antinode1Y, antinode1X)
+                let antinode1X = me_x
+                let antinode1Y = me_y
+                do {
+                    antinode1X = me_x < x ? antinode1X + diffX : antinode1X - diffX
+                    antinode1Y = me_y < y ? antinode1Y + diffY : antinode1Y - diffY
+                    console.log('From ' + y + ',' + x + ' adding node at ' + y + ',' + x)
+                    addAntiNode(antinode1Y, antinode1X)
+                } while ((antinode1X > 0 && antinode1X < map[0].length - 1) && (antinode1Y > 0 && antinode1Y < map.length - 1))
             }
         }
     }
