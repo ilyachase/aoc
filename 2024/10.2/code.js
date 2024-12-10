@@ -2,9 +2,7 @@ const fs = require('fs')
 
 const map = fs.readFileSync('input.txt').toString().split('\n').map(line => line.split('').map(v => parseInt(v)))
 
-let foundTrails = {}
 let score = 0
-
 function checkTrail(trailHead, currentTrail, map, currentHeight, y, x) {
     if (y < 0 || y >= map.length) {
         return
@@ -22,19 +20,11 @@ function checkTrail(trailHead, currentTrail, map, currentHeight, y, x) {
         return
     }
 
-    currentTrail += '[' + y + ']' + '[' + x + ']' + '=' + map[y][x]
+    currentTrail += '['+y+']'+'['+x+']'+'='+map[y][x]
 
     if (map[y][x] === 9) {
-        if (foundTrails[trailHead] === undefined) {
-            foundTrails[trailHead] = []
-        }
-
-        if (!foundTrails[trailHead].includes('[' + y + ']' + '[' + x + ']')) {
-            score++
-            console.log(currentTrail)
-            foundTrails[trailHead].push('[' + y + ']' + '[' + x + ']')
-        }
-
+        score++
+        console.log(currentTrail)
         return
     }
 
@@ -51,11 +41,11 @@ for (let y = 0; y < map.length; y++) {
             continue
         }
 
-        let currentTrail = '[' + y + ']' + '[' + x + ']' + '=' + map[y][x]
-        checkTrail('[' + y + ']' + '[' + x + ']', currentTrail, map, map[y][x], y - 1, x)
-        checkTrail('[' + y + ']' + '[' + x + ']', currentTrail, map, map[y][x], y, x + 1)
-        checkTrail('[' + y + ']' + '[' + x + ']', currentTrail, map, map[y][x], y + 1, x)
-        checkTrail('[' + y + ']' + '[' + x + ']', currentTrail, map, map[y][x], y, x - 1)
+        let currentTrail = '['+y+']'+'['+x+']'+'='+map[y][x]
+        checkTrail('['+y+']'+'['+x+']', currentTrail, map, map[y][x], y - 1, x)
+        checkTrail('['+y+']'+'['+x+']', currentTrail, map, map[y][x], y, x + 1)
+        checkTrail('['+y+']'+'['+x+']', currentTrail, map, map[y][x], y + 1, x)
+        checkTrail('['+y+']'+'['+x+']', currentTrail, map, map[y][x], y, x - 1)
 
         if (score - oldScore > 0) {
             console.log('Tailhead score: ' + (score - oldScore))
