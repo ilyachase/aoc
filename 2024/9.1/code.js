@@ -5,50 +5,51 @@ const disc = fs.readFileSync('input.txt').toString().split(''), spaces = [], fil
 let fileId = 0
 for (let i = 0; i < disc.length; i++) {
     if (i % 2 === 0) {
-        files.push({id: fileId, size:parseInt(disc[i])})
+        files.push({id: fileId, size: parseInt(disc[i])})
         fileId++
     } else {
         spaces.push(parseInt(disc[i]))
     }
 }
 
-let currentFreeSpace = spaces.shift(), fixedFile = files.shift(), i = 0, currentFile = files.pop(), checksum = 0
-outerLoop: while (true) {
-    while (fixedFile !== undefined && fixedFile.size > 0) {
-        console.log(i + ' * ' + fixedFile.id)
-        checksum += i * fixedFile.id
-        i++
-        fixedFile.size--
-    }
-
-    if (currentFreeSpace === 0) {
-        currentFreeSpace = spaces.shift()
-        fixedFile = files.shift()
-
-        if (currentFreeSpace === undefined && currentFile.size > 0) {
-            while (currentFile.size > 0) {
-                console.log(i + ' * ' + currentFile.id)
-                checksum += i * currentFile.id
-                i++
-                currentFile.size--
-            }
+let currentFreeSpace = undefined, fixedFile, i = 0, poppedFile = undefined, checksum = 0
+while (true) {
+    // start with fixed file
+    fixedFile = files.shift()
+    if (fixedFile !== undefined) {
+        while (fixedFile.size > 0) {
+            console.log(i + ' * ' + fixedFile.id)
+            checksum += i * fixedFile.id
+            i++
+            fixedFile.size--
+        }
+    } else if (poppedFile !== undefined) {
+        // if no fixed files - check poppedFile tail
+        while (poppedFile.size > 0) {
+            console.log(i + ' * ' + poppedFile.id)
+            checksum += i * poppedFile.id
+            i++
+            poppedFile.size--
         }
     }
 
-    while (currentFile.size <= 0) {
-        currentFile = files.pop()
-        if (currentFile === undefined) {
-            break outerLoop
+    // get next free space
+    currentFreeSpace = spaces.shift()
+    if (currentFreeSpace !== undefined && currentFreeSpace > 0) {
+        // if got free space - squeeze in poppedFile
+        poppedFile = files.pop()
+        if (poppedFile === undefined) {
+            break
+        }
+
+        while (currentFreeSpace > 0 && poppedFile.size > 0) {
+            console.log(i + ' * ' + poppedFile.id)
+            checksum += i * poppedFile.id
+            i++
+            poppedFile.size--
+            currentFreeSpace--
         }
     }
-
-    while (currentFreeSpace !== undefined && currentFreeSpace > 0 && )
-    console.log(i + ' * ' + currentFile.id)
-    checksum += i * currentFile.id
-
-    currentFreeSpace--
-    currentFile.size--
-    i++
 }
 
 console.log(checksum)
