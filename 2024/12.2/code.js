@@ -4,7 +4,7 @@ const map = fs.readFileSync('input.txt').toString().split('\n').map(line => line
 
 const observedPlots = []
 
-function buildRegion(map, plant, y, x, currentRegionPlots = []) {
+function buildRegion(map, plant, y, x, regionData, currentRegionPlots = []) {
     if (y < 0 || y > map.length - 1) {
         return
     }
@@ -21,13 +21,17 @@ function buildRegion(map, plant, y, x, currentRegionPlots = []) {
         return
     }
 
+    // update region area
+    regionData.area++
+    // update region perimeter
+
     currentRegionPlots.push(y+','+x)
     observedPlots.push(y+','+x)
 
-    buildRegion(map, plant, y + 1, x, currentRegionPlots)
-    buildRegion(map, plant, y, x + 1, currentRegionPlots)
-    buildRegion(map, plant, y - 1, x, currentRegionPlots)
-    buildRegion(map, plant, y, x - 1, currentRegionPlots)
+    buildRegion(map, plant, y + 1, x, regionData, currentRegionPlots)
+    buildRegion(map, plant, y, x + 1, regionData, currentRegionPlots)
+    buildRegion(map, plant, y - 1, x, regionData, currentRegionPlots)
+    buildRegion(map, plant, y, x - 1, regionData, currentRegionPlots)
 }
 
 for (let y = 0; y < map.length; y++) {
@@ -36,8 +40,8 @@ for (let y = 0; y < map.length; y++) {
             continue
         }
 
-        const currentRegionPlots = []
-        buildRegion(map, map[y][x], y, x, currentRegionPlots)
+        const regionData = {area: 0, perimeter: 0}
+        buildRegion(map, map[y][x], y, x, regionData)
         const c = 123
     }
 }
