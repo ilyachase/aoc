@@ -15,17 +15,23 @@ function incrementNumber(number, increment) {
         stones[number] = newNumber(number, increment)
     } else {
         stones[number].count += increment
-        if (stones[number].count <= 0) {
-            delete stones[number]
-        }
     }
 }
 
 for (let i = 0; i < 25; i++) {
-    const currentStones = Object.keys(stones)
-    for (let number of currentStones) {
-        for (let j = 0; j < stones[number].count; j++) {
+    for (let number in stones) {
+        if (stones[number].count <= 0) {
+            delete stones[number]
+        }
+    }
+
+    const c = debugStones(stones)
+
+    for (let number in stones) {
+        const jLim = stones[number].count
+        for (let j = 0; j < jLim; j++) {
             if (number === '0') {
+                incrementNumber(number, -1)
                 incrementNumber(1, 1)
             } else if (number.length % 2 === 0) {
                 incrementNumber(number, -1)
@@ -39,9 +45,17 @@ for (let i = 0; i < 25; i++) {
     }
 }
 
-let length = 0
-for (let number in stones) {
-    length += stones[number].count
+function debugStones(stones) {
+    const res = []
+    for (let number of Object.keys(stones).reverse()) {
+        for (let j = 0; j < stones[number].count; j++) {
+            res.push(stones[number].value)
+        }
+    }
+
+    return res.join(' ') + ' = ' + res.length
 }
+
+const length = Object.keys(stones).reduce((acc, number) => acc + stones[number].count, 0)
 
 console.log(length)

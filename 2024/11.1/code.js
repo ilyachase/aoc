@@ -3,6 +3,7 @@ const fs = require('fs')
 const stones = fs.readFileSync('input.txt').toString().split(' ').map(v => parseInt(v))
 
 for (let i = 0; i < 25; i++) {
+    // console.log('|' + stones.join(' ') + ' = ' + stones.length)
     for (let j = 0; j < stones.length; j++) {
         if (stones[j] === 0) {
             stones[j] = 1
