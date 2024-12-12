@@ -1,20 +1,47 @@
 const fs = require('fs')
 
-const stones = fs.readFileSync('input.txt').toString().split(' ').map(v => parseInt(v))
+let stones = {}
+fs.readFileSync('input.txt').toString().split(' ').map(v => incrementNumber(v, 1))
 
-for (let i = 0; i < 75; i++) {
-    for (let j = 0; j < stones.length; j++) {
-        if (stones[j] === 0) {
-            stones[j] = 1
-        } else if (stones[j].toString().length % 2 === 0) {
-            const oldStone = stones[j].toString()
-            stones[j] = parseInt(oldStone.substring(0, Math.floor(oldStone.length / 2)))
-            stones.splice(j+1, 0, parseInt(oldStone.substring(Math.floor(oldStone.length / 2))))
-            j++
-        } else {
-            stones[j] *= 2024
+function newNumber(number, count) {
+    return {
+        count,
+        value: parseInt(number),
+    }
+}
+
+function incrementNumber(number, increment) {
+    if (!stones[number]) {
+        stones[number] = newNumber(number, increment)
+    } else {
+        stones[number].count += increment
+        if (stones[number].count <= 0) {
+            delete stones[number]
         }
     }
 }
 
-console.log(stones.length)
+for (let i = 0; i < 25; i++) {
+    const currentStones = Object.keys(stones)
+    for (let number of currentStones) {
+        for (let j = 0; j < stones[number].count; j++) {
+            if (number === '0') {
+                incrementNumber(1, 1)
+            } else if (number.length % 2 === 0) {
+                incrementNumber(number, -1)
+                incrementNumber(parseInt(number.substring(0, Math.floor(number.length / 2))), 1)
+                incrementNumber(parseInt(number.substring(Math.floor(number.length / 2))), 1)
+            } else {
+                incrementNumber(number, -1)
+                incrementNumber(number * 2024, 1)
+            }
+        }
+    }
+}
+
+let length = 0
+for (let number in stones) {
+    length += stones[number].count
+}
+
+console.log(length)
