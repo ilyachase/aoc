@@ -18,17 +18,18 @@ function incrementNumber(number, increment) {
     }
 }
 
-for (let i = 0; i < 25; i++) {
+for (let i = 0; i < 75; i++) {
     for (let number in stones) {
         if (stones[number].count <= 0) {
             delete stones[number]
         }
     }
 
-    const c = debugStones(stones)
+    // const c = debugStones(stones)
+    const currentStones = structuredClone(stones)
 
-    for (let number in stones) {
-        const jLim = stones[number].count
+    for (let number in currentStones) {
+        const jLim = currentStones[number].count
         for (let j = 0; j < jLim; j++) {
             if (number === '0') {
                 incrementNumber(number, -1)
