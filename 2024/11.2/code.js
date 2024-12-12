@@ -25,24 +25,21 @@ for (let i = 0; i < 75; i++) {
         }
     }
 
+    console.log(i)
     // const c = debugStones(stones)
     const currentStones = structuredClone(stones)
 
     for (let number in currentStones) {
-        const jLim = currentStones[number].count
-        for (let j = 0; j < jLim; j++) {
-            if (number === '0') {
-                incrementNumber(number, -1)
-                incrementNumber(1, 1)
-            } else if (number.length % 2 === 0) {
-                incrementNumber(number, -1)
-                incrementNumber(parseInt(number.substring(0, Math.floor(number.length / 2))), 1)
-                incrementNumber(parseInt(number.substring(Math.floor(number.length / 2))), 1)
-            } else {
-                incrementNumber(number, -1)
-                incrementNumber(number * 2024, 1)
-            }
+        const numberCount = currentStones[number].count
+        if (number === '0') {
+            incrementNumber(1, numberCount)
+        } else if (number.length % 2 === 0) {
+            incrementNumber(parseInt(number.substring(0, Math.floor(number.length / 2))), numberCount)
+            incrementNumber(parseInt(number.substring(Math.floor(number.length / 2))), numberCount)
+        } else {
+            incrementNumber(number * 2024, numberCount)
         }
+        incrementNumber(number, -1 * numberCount)
     }
 }
 
