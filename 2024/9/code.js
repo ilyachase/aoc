@@ -40,7 +40,6 @@ function buildSegments(files, spaces) {
 }
 
 function optimizeSegments(segments) {
-    const optimizedSegments = []
     for (let i = segments.length - 1; i > 0; i--) {
         if (segments[i].type === 'space') {
             continue
@@ -53,18 +52,16 @@ function optimizeSegments(segments) {
             }
         }
     }
-
-    return optimizedSegments
 }
 
 function calculateChecksum(optimizedSegments) {
     let checksum = 0
     for (let i = 0; i < optimizedSegments.length; i++) {
-        if (optimizedSegments[i] === '.') {
+        if (optimizedSegments[i].type === 'space') {
             break
         }
 
-        checksum += i * parseInt(optimizedSegments[i])
+        checksum += i * parseInt(optimizedSegments[i].id)
     }
 
     return checksum
@@ -74,8 +71,8 @@ const [files, spaces] = parseInput(disc)
 
 const segments = buildSegments(files, spaces)
 
-const optimizedSegments = optimizeSegments(segments)
+optimizeSegments(segments)
 
-const checksum = calculateChecksum(optimizedSegments)
+const checksum = calculateChecksum(segments)
 
 console.log(checksum)
