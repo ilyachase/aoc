@@ -45,6 +45,7 @@ function optimizeSegments(segments) {
         for (let j = 0; j < i; j++) {
             if (segments[j] === '.') {
                 [segments[j], segments[i]] = [segments[i], segments[j]]
+                break
             }
         }
     }
