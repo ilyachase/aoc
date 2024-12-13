@@ -49,21 +49,23 @@ function countSides(perimeterCoords) {
         let [y, x, direction] = perimeterCoord
 
         if (direction === 'up' || direction === 'down') {
-            let i = 1, neighbourIndex
-            do {
-                neighbourIndex = perimeterCoords.findIndex(coord => {
-                    let [local_y, local_x, local_direction] = coord
-                    if (direction !== local_direction || local_y !== y) {
-                        return false
-                    }
+            for (let operation of ['+', '-']) {
+                let i = 1, neighbourIndex
+                do {
+                    neighbourIndex = perimeterCoords.findIndex(coord => {
+                        let [local_y, local_x, local_direction] = coord
+                        if (direction !== local_direction || local_y !== y) {
+                            return false
+                        }
 
-                    return (local_x === x - i)
-                })
-                i++
-                if (neighbourIndex !== -1) {
-                    perimeterCoords.splice(neighbourIndex, 1)
-                }
-            } while (neighbourIndex !== -1)
+                        return (local_x === (operation === '+' ? x + i : x - i))
+                    })
+                    i++
+                    if (neighbourIndex !== -1) {
+                        perimeterCoords.splice(neighbourIndex, 1)
+                    }
+                } while (neighbourIndex !== -1)
+            }
         } else {
         }
     }
