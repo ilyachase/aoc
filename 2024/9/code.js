@@ -16,6 +16,27 @@ function parseInput(disc) {
     return [files, spaces]
 }
 
+function buildSegments(files, spaces) {
+    let nextFile, nextSpace, segments = ''
+    do {
+        nextFile = files.shift()
+        nextSpace = spaces.shift()
+
+        if (nextFile) {
+            segments += nextFile.id.toString().repeat(nextFile.size)
+        }
+
+        if (nextSpace) {
+            segments += '.'.repeat(nextSpace)
+        }
+
+    } while (nextFile || nextSpace)
+
+    return segments
+}
+
 const [files, spaces] = parseInput(disc)
 
-console.log(files,spaces)
+const segments = buildSegments(files, spaces)
+
+console.log(files, spaces)
