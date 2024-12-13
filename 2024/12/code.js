@@ -43,6 +43,34 @@ function buildRegion(map, plant, y, x, regionData, currentRegionPlots = []) {
 }
 
 let p1 = 0, p2 = 0
+
+function countSides(perimeterCoords) {
+    for (let perimeterCoord of perimeterCoords) {
+        let [y, x, direction] = perimeterCoord
+
+        if (direction === 'up' || direction === 'down') {
+            let i = 1, neighbourIndex
+            do {
+                neighbourIndex = perimeterCoords.findIndex(coord => {
+                    let [local_y, local_x, local_direction] = coord
+                    if (direction !== local_direction || local_y !== y) {
+                        return false
+                    }
+
+                    return (local_x === x - i)
+                })
+                i++
+                if (neighbourIndex !== -1) {
+                    perimeterCoords.splice(neighbourIndex, 1)
+                }
+            } while (neighbourIndex !== -1)
+        } else {
+        }
+    }
+
+    return perimeterCoords.length;
+}
+
 for (let y = 0; y < map.length; y++) {
     for (let x = 0; x < map[0].length; x++) {
         if (observedPlots.includes(y + ',' + x)) {
@@ -52,28 +80,7 @@ for (let y = 0; y < map.length; y++) {
         const regionData = {area: 0, perimeter: 0, perimeterCoords: []}
         buildRegion(map, map[y][x], y, x, regionData)
         p1 += regionData.area * regionData.perimeter
-
-        const sides = {up: [], right: [], down: [], left: []}
-        for (let perimeterCoord of regionData.perimeterCoords) {
-            let [y, x, direction] = perimeterCoord
-
-            if (direction === 'up' && !sides.up.includes(y)) {
-                sides.up.push(y)
-            }
-
-            if (direction === 'right' && !sides.right.includes(x)) {
-                sides.right.push(x)
-            }
-
-            if (direction === 'down' && !sides.down.includes(y)) {
-                sides.down.push(y)
-            }
-
-            if (direction === 'left' && !sides.left.includes(x)) {
-                sides.left.push(x)
-            }
-        }
-        const sidesCount = Object.keys(sides).reduce((acc, dir) => acc + sides[dir].length, 0)
+        const sidesCount = countSides(regionData.perimeterCoords);
         p2 += regionData.area * sidesCount
     }
 }
