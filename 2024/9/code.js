@@ -35,8 +35,27 @@ function buildSegments(files, spaces) {
     return segments
 }
 
+function optimizeSegments(segments) {
+    segments = segments.split('')
+    for (let i = segments.length - 1; i > 0; i--) {
+        if (segments[i] === '.') {
+            continue
+        }
+
+        for (let j = 0; j < i; j++) {
+            if (segments[j] === '.') {
+                [segments[j], segments[i]] = [segments[i], segments[j]]
+            }
+        }
+    }
+
+    return segments.join('')
+}
+
 const [files, spaces] = parseInput(disc)
 
 const segments = buildSegments(files, spaces)
+
+const optimizedSegments = optimizeSegments(segments)
 
 console.log(files, spaces)
