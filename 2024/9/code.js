@@ -7,27 +7,31 @@ function parseInput(disc) {
     let fileId = 0
     for (let i = 0; i < disc.length; i++) {
         if (i % 2 === 0) {
-            files.push({id: fileId, size: parseInt(disc[i])})
+            files.push({type: 'file', id: fileId, size: parseInt(disc[i])})
             fileId++
         } else {
-            spaces.push(parseInt(disc[i]))
+            spaces.push({type: 'space', size: parseInt(disc[i])})
         }
     }
     return [files, spaces]
 }
 
 function buildSegments(files, spaces) {
-    let nextFile, nextSpace, segments = ''
+    let nextFile, nextSpace, segments = []
     do {
         nextFile = files.shift()
         nextSpace = spaces.shift()
 
         if (nextFile) {
-            segments += nextFile.id.toString().repeat(nextFile.size)
+            for (let i = 0; i < nextFile.size; i++) {
+                segments.push({...nextFile, size: 1})
+            }
         }
 
         if (nextSpace) {
-            segments += '.'.repeat(nextSpace)
+            for (let i = 0; i < nextSpace.size; i++) {
+                segments.push({...nextSpace, size: 1})
+            }
         }
 
     } while (nextFile || nextSpace)
@@ -36,21 +40,21 @@ function buildSegments(files, spaces) {
 }
 
 function optimizeSegments(segments) {
-    segments = segments.split('')
+    const optimizedSegments = []
     for (let i = segments.length - 1; i > 0; i--) {
-        if (segments[i] === '.') {
+        if (segments[i].type === 'space') {
             continue
         }
 
         for (let j = 0; j < i; j++) {
-            if (segments[j] === '.') {
+            if (segments[j].type === 'space') {
                 [segments[j], segments[i]] = [segments[i], segments[j]]
                 break
             }
         }
     }
 
-    return segments.join('')
+    return optimizedSegments
 }
 
 function calculateChecksum(optimizedSegments) {
