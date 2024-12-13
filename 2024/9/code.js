@@ -52,10 +52,25 @@ function optimizeSegments(segments) {
     return segments.join('')
 }
 
+function calculateChecksum(optimizedSegments) {
+    let checksum = 0
+    for (let i = 0; i < optimizedSegments.length; i++) {
+        if (optimizedSegments[i] === '.') {
+            break
+        }
+
+        checksum += i * parseInt(optimizedSegments[i])
+    }
+
+    return checksum
+}
+
 const [files, spaces] = parseInput(disc)
 
 const segments = buildSegments(files, spaces)
 
 const optimizedSegments = optimizeSegments(segments)
 
-console.log(files, spaces)
+const checksum = calculateChecksum(optimizedSegments)
+
+console.log(checksum)
